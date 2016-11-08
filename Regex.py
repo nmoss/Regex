@@ -6,13 +6,22 @@ state_ids = 0
 
 def parse_regex(expression):
     stack = []
-    for symbol in expression:
+    i = 0
+    while i < len(expression):
         s = NFA()
+        symbol = expression[i]
         if symbol == '\\':
-            s = single_NFA(symbol)
+            i += 1
+            symbol = expression[i]
+            s = NFA.single_NFA(symbol)
+        elif symbol == '*':
+            s = stack.pop()
+            print(stack)
+            s = s.kleene()
         else:
-            s = single_NFA(symbol)
+            s = NFA.single_NFA(symbol)
         stack.append(s)
+        i += 1
 
     s0 = stack.pop()
     while stack != []:
@@ -20,6 +29,7 @@ def parse_regex(expression):
         s0 = s1.concat(s0)
     return s0
 
+'''
 def get_next_id():
     global state_ids
     x = state_ids
@@ -33,9 +43,9 @@ def single_NFA(c):
     s0.add_transition(c, s1)
     s.add_state([s0,s1])
     return s;
+'''
 
-
-s = single_NFA('a')
+s = NFA.single_NFA('a')
 print(s.to_string())
-s = parse_regex('abcdef')
+s = parse_regex('a*')
 print(s.to_string())

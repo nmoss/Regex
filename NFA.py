@@ -1,8 +1,10 @@
+from State import *
+from Counter import *
 
 class NFA:
 
     eps = "$"
-
+    counter = Counter()
     def __init__(self):
         self.regex = ""
         self.alphabet = set()
@@ -22,6 +24,15 @@ class NFA:
     def get_start_state(self):
         return self.states[0]
 
+    @classmethod
+    def single_NFA(cls, c):
+        s = NFA()
+        s0 = State([],NFA.counter.get_next_id())
+        s1 = State([],NFA.counter.get_next_id())
+        s0.add_transition(c, s1)
+        s.add_state([s0,s1])
+        return s
+
     # Concatenates this NFA with another nfa
     # adds an epsilon transition between this accept state and new start state.
     def concat(self, nfa):
@@ -37,8 +48,8 @@ class NFA:
 
     def kleene(self):
         result = NFA()
-        start = State()
-        done = State()
+        start = State([], NFA.counter.get_next_id())
+        done = State([], NFA.counter.get_next_id())
         start.add_transition(NFA.eps, done)
         start.add_transition(NFA.eps, self.get_start_state())
         accept = self.get_accept_state()
@@ -61,5 +72,4 @@ class NFA:
             nfa += s.to_string()
         nfa += "}"
         return nfa
-
 
