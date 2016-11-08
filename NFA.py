@@ -61,6 +61,24 @@ class NFA:
         result.add_state([done])
         return result
 
+    def union(self, nfa):
+        result = NFA()
+        start = State([], NFA.counter.get_next_id())
+        done = State([], NFA.counter.get_next_id())
+        start.add_transition(NFA.eps, self.get_start_state())
+        start.add_transition(NFA.eps, nfa.get_start_state())
+        accept = self.get_accept_state()
+        b_accept = nfa.get_accept_state()
+        accept.add_transition(NFA.eps, done)
+        b_accept.add_transition(NFA.eps, done)
+        result.add_state([start])
+        for s in self.states:
+            result.add_state([s])
+        for s in nfa.states:
+            result.add_state([s])
+        result.add_state([done])
+        return result
+
     def to_string(self):
         nfa = "digraph g {\nrankdir = LR;\nedge [arrowsize=0.8];\n"
         nfa += "label=\"" + self.regex + "\";\n"
