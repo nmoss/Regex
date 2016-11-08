@@ -18,16 +18,19 @@ def parse_regex(expression):
             s = stack.pop()
             s = s.kleene()
         elif symbol == '|':
-            print('stack', stack)
             s = crush(stack)
             i += 1
-            print(i)
             sub = expression[i:]
-            print('sub', sub)
             s1 = parse_regex(sub)
             s = s.union(s1)
             stack.append(s)
             break
+        elif symbol == '(':
+            pos = match_parens(i, expression)
+            i += 1
+            sub = expression[i:pos]
+            s = parse_regex(sub)
+            i = pos
         else:
             s = NFA.single_NFA(symbol)
         stack.append(s)
@@ -46,23 +49,20 @@ def crush(stack):
         s0 = s1.concat(s0)
     return s0
 
-'''
-def get_next_id():
-    global state_ids
-    x = state_ids
-    state_ids += 1
-    return x
+def match_parens(start, expression):
+    close = start
+    count = 1
+    while count > 0:
+        close += 1
+        c = expression[close]
+        if c == '(':
+            count += 1
+        elif c == ')':
+            count -= 1
+    return close
 
-def single_NFA(c):
-    s = NFA()
-    s0 = State([],get_next_id())
-    s1 = State([],get_next_id())
-    s0.add_transition(c, s1)
-    s.add_state([s0,s1])
-    return s;
-'''
 
-s = NFA.single_NFA('a')
-print(s.to_string())
-s = parse_regex("a|b")
+#s = NFA.single_NFA('a')
+#print(s.to_string())
+s = parse_regex("z(a|b)j")
 print(s.to_string())
