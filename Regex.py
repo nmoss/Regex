@@ -61,6 +61,23 @@ def match_parens(start, expression):
             count -= 1
     return close
 
+def expand_classes(regex):
+    lowers = 'a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z'
+    uppers = 'A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z'
+    digits = '0|1|2|3|4|5|6|7|8|9'
+
+    if '[a-zA-Z0-9]' in regex:
+        regex = regex.replace('[a-zA-Z0-9]', '(' + lowers + '|' + uppers + '|' + digits + ')')
+    if '[a-zA-Z]' in regex:
+        regex = regex.replace('[a-zA-Z]', '(' + lowers + '|' + uppers + ')')
+    if '[0-9]' in regex:
+        regex = regex.replace('[0-9]', '(' + digits + ')')
+    if '[a-z]' in regex:
+        regex = regex.replace('[a-z]', '(' + lowers + ')')
+    if '[A-Z]' in regex:
+        regex = regex.replace('[A-Z]', '(' + uppers + ')')
+
+    return regex
 
 #s = NFA.single_NFA('a')
 #print(s.to_string())
