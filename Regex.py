@@ -3,6 +3,7 @@ from NFA import *
 from State import *
 
 def parse_regex(expression):
+    expression = expand_classes(expression)
     stack = []
     i = 0
     print('expression', expression)

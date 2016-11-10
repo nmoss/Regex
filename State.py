@@ -23,7 +23,7 @@ class State(object):
     def to_string(self):
         s = ""
         for (key, value) in self.transitions:
-            s += "\t" + str(self.name) + " -> " + str(value.name) + " [label=" + key + "];" + "\n"
+            s += "\t" + str(self.name) + " -> " + str(value.name) + " [label=" + "\"" + key + "\"" + "];" + "\n"
         return s
 
     
