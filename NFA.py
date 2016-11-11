@@ -1,6 +1,6 @@
 from State import *
 from Counter import *
-
+from DFA import *
 class NFA:
 
     eps = "$"
@@ -39,23 +39,24 @@ class NFA:
         nexts = start.next(NFA.eps)
         for s in nexts:
             out.append(s)
-            out += closure(s)
-        return set(out)
+            out += self.closure(s)
+        return frozenset(out)
     
     def move(self, start, c):
-        return set(start.next(c))
+        return frozenset(start.next(c))
 
     def toDFA(self):
-        alphabet.remove("$")
+        self.alphabet.remove("$")
         result = DFA(self.get_accept_state().id)
-        new_start = State(closure(self.get_start_state()))
-        result.add_state(new_start)
-        visited.append(closure(self.get_start_state())
-        self.dfa_next(closure(self.get_start_state()),new_start,result,visited)
+        new_start = State([],NFA.counter.get_next_id(),self.closure(self.get_start_state()))
+        result.add_state([new_start])
+        visited = []
+        visited.append(self.closure(self.get_start_state()))
+        self.dfa_next(self.closure(self.get_start_state()),new_start,result,visited)
 
         return result
 
-    def dfa_next(states, start, result, visited):
+    def dfa_next(self,states, start, result, visited):
         for c in self.alphabet:
             nexts = []
             closed = []
@@ -66,18 +67,19 @@ class NFA:
             nexts = set(nexts)
             closed = set(closed)
             if closed == states:
+                print('start:', start)
                 start.add_transition(c, start)
             elif not len(closed) == 0:
                 if closed not in visited:
-                    s1 = State(closed)
+                    s1 = State([], NFA.counter.get_next_id(),closed)
                     start.add_transition(c, s1)
-                    result.add_state(s1)
+                    result.add_state([s1])
                     visited.append(closed)
                     self.dfa_next(closed,s1,result,visited)
                 else:
-                    s1 = get_state_containing(closed,result)
+                    s1 = self.get_state_containing(closed,result)
                     start.add_transition(c,s1)
-
+    
     def get_state_containing(self, closed, dfa):
         for s in dfa.states:
             if s.states == closed:

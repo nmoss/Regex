@@ -1,3 +1,5 @@
+from State import *
+from Counter import *
 class DFA:
 
     def __init__(self, accept_id):
@@ -31,19 +33,19 @@ class DFA:
         for s in self.states:
             for s1 in s.states:
                 if s1.id == self.accept:
-                    res += s.id + '; '
+                    res += str(s.id) + '; '
         return res
 
     def is_accepting(self, state):
         for s in state.states:
-            if s.id == accept:
+            if s.id == self.accept:
                 return True
         return False
 
     def match(self, string):
         start = self.get_start_state()
         for c in string:
-            nexts = start.next_states(c)
+            nexts = start.next(c)
             if nexts == []:
                 return False
             start  = nexts[0]

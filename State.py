@@ -4,6 +4,7 @@ class State(object):
         self.transitions = transitions
         self.name = name
         self.states = states
+        self.id = name
 
     def next(self, character):
         next_states = []

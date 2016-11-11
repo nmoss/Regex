@@ -1,4 +1,4 @@
-
+from DFA import *
 from NFA import *
 from State import *
 
@@ -84,3 +84,6 @@ def expand_classes(regex):
 #print(s.to_string())
 s = parse_regex("z(a|b)j")
 print(s.to_string())
+s = s.toDFA()
+print(s.to_string())
+print(s.match('zaj'))
