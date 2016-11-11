@@ -1,8 +1,9 @@
 class State(object):
     
-    def __init__(self, transitions=[], name=0):
+    def __init__(self, transitions=[], name=0, states=set()):
         self.transitions = transitions
         self.name = name
+        self.states = states
 
     def next(self, character):
         next_states = []
